@@ -1,6 +1,5 @@
-import initializing_functions, game_variables
-from game_functions import *
+from game_variables import game
 
 
-game_variables.game.show_start_screen()
+game.show_start_screen()
 
