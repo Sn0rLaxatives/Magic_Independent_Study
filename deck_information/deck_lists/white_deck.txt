@@ -1,0 +1,30 @@
+Serra's Guardian, 6, Creature, give_all_creatures_vigilance, 5, 5, Flyers
+Dwarven Priest, 4, Creature, life_for_each_creature, 2, 4, All
+Herald Of Faith, 5, Creature, gain_life_on_attack, 4, 3, Flyers
+Loxodon Line Breaker, 3, Creature, none, 3, 2, All
+Loxodon Line Breaker, 3, Creature, none, 3, 2, All
+Oreskos Swiftclaw, 2, Creature, none, 3, 1, All
+Pegasus Courser, 3, Creature, gift_flying_on_attack, 1, 3, Flyers
+Star-Crowned Stag, 4, Creature, tap_target_creature, 3, 3, All
+Silverbeak Griffin, 2, Creature, none, 2, 2, Flyers
+Sun Sentinel, 2, Creature, vigilance, 2, 2, All
+Rustwing Falcon, 1, Creature, none, 1, 2, Flyers
+Take Vengeance, 2, Sorcery, destroy_target_tapped_creature
+Inspired Charge, 4, Instant, buff_creatures
+Mighty Leap, 2, Instant, buff_with_flying
+Revitalize, 2, Instant, life_gain_then_draw
+Knight's Pledge, 2, Enchantment, two_buff_creature
+Luminous Bonds, 3, Enchantment, creature_cannot_attack_or_block
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana
+Plains, 0, Land, make_one_mana

@@ -180,7 +180,7 @@ class GameBoard:
         self.phase_button_frame = Frame(self.root, height=700, width=66, borderwidth=1, relief="solid")
         self.phase_button_frame.grid(row=0, column=1)
 
-        self.game_board_canvas = Canvas(self.root, height=700, width=1190, background="red")
+        self.game_board_canvas = Canvas(self.root, height=700, width=1190)
         self.game_board_canvas.grid(row=0, column=2)
 
         self.add_widgets_to_game_data_frame()
@@ -205,8 +205,6 @@ class GameBoard:
         self.nonpriority_player_health_label.grid(row=3, column=0)
         self.non_priority_health.set(game_variables.non_priority_player.life_total)
 
-        game_variables.player_taking_turn.draw_card()
-
         self.hand_is_not_showing = True
         self.card_images_from_hand_being_viewed = []
         self.view_hand_button = Button(self.game_data_frame, text="View Hand", command=self.view_hand)
@@ -220,11 +218,11 @@ class GameBoard:
         if self.hand_is_not_showing:
             image_incrementation = 0
             for card in game_variables.player_taking_turn.hand:
-                card_on_canvas = self.game_board_canvas.create_image(100 + image_incrementation, 100,
+                card_on_canvas = self.game_board_canvas.create_image(200 + image_incrementation, 350,
                                                                      image=card.small_image,
                                                                      activeimage=card.regular_image)
                 self.card_images_from_hand_being_viewed.append(card_on_canvas)
-                image_incrementation += 60
+                image_incrementation += 90
             self.hand_is_not_showing = False
         else:
             for card_from_hand_being_viewed in self.card_images_from_hand_being_viewed:
@@ -239,15 +237,19 @@ class GameBoard:
                 game_variables.player_taking_turn = game_variables.player_not_taking_turn
                 game_variables.player_not_taking_turn = new_next_player_taking_turn
                 self.current_phase = eval(game_variables.phases_of_turn[self.phase_incrementor])
+                self.highlight_current_phase(self.phase_incrementor)
+                self.set_previous_phase_button_background(5)
                 self.phase_incrementor +=1
             else:
                 self.current_phase = eval(game_variables.phases_of_turn[self.phase_incrementor])
+                self.highlight_current_phase(self.phase_incrementor)
                 self.phase_incrementor += 1
         else:
             self.view_hand()
             self.next_phase()
 
     def add_widgets_to_phase_button_frame(self):
+        self.list_of_phase_buttons = []
         self.up_arrow_image = PhotoImage(file="utility_images/uparrow.gif")
 
         self.first_blank_frame = Frame(self.phase_button_frame, height=66, width=66)
@@ -286,6 +288,27 @@ class GameBoard:
 
         self.last_blank_frame = Frame(self.phase_button_frame, height=50, width=66)
         self.last_blank_frame.grid(row=10)
+
+        self.list_of_phase_buttons.append(self.beginning_phase_button)
+        self.list_of_phase_buttons.append(self.main_phase_button)
+        self.list_of_phase_buttons.append(self.combat_phase_button)
+        self.list_of_phase_buttons.append(self.second_main_phase_button)
+        self.list_of_phase_buttons.append(self.end_phase_button)
+
+    def highlight_current_phase(self, phase_incrementor):
+        if phase_incrementor > 0:
+            self.set_current_phase_button_background(phase_incrementor)
+            self.set_previous_phase_button_background(phase_incrementor)
+        else:
+            self.set_current_phase_button_background(phase_incrementor)
+
+    def set_current_phase_button_background(self, phase_incrementor):
+        current_phase_button = self.list_of_phase_buttons[phase_incrementor]
+        current_phase_button.config(highlightbackground="yellow")
+
+    def set_previous_phase_button_background(self, phase_incrementor):
+        previous_phase_button = self.list_of_phase_buttons[phase_incrementor - 1]
+        previous_phase_button.config(highlightbackground="grey")
 
     def update_health_labels(self):
         self.priority_health.set(game_variables.priority_player.life_total)

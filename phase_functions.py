@@ -14,11 +14,9 @@ def determine_defending_player(player):
 
 
 def declare_attackers(player):
-    # GUI prompt player to highlight creatures that are going to attack, add those creatures to selected creature list
     selected_creatures = []
     return selected_creatures
 
 def declare_blockers(player):
-    # How to pair blocker to attacker, dictioanry??
     selected_creatures = {}
     return selected_creatures

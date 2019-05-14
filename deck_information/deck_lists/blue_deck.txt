@@ -1,0 +1,30 @@
+Riddlemaster Sphinx, 6, Creature, optional_bounce, 5, 5, Flyers
+Aven Wind Mage, 3, Creature, strength_by_spell, 2, 2, Flyers
+Frilled Sea Serpent, 6, Creature, make_unblockable, 4, 6, All
+Snapping Drake, 4, Creature, none, 3, 2, Flyers
+Snapping Drake, 4, Creature, none, 3, 2, Flyers
+Tolarian Scholar, 3, Creature, none, 2, 3, All
+Tolarian Scholar, 3, Creature, none, 2, 3, All
+Wall of Mist, 2, Creature, none, 0, 5, All
+Air Elemental, 5, Creature, none, 4, 4, Flyers
+Mist-Cloaked Herald, 1, Creature, none, 1, 1, None
+Divination, 3, Sorcery, draw_two
+Divination, 3, Sorcery, draw_two
+Sleep, 4, Sorcery, tap_all_creatures_of_target_player
+Uncomfortable Chill, 3, Instant, weaken_creatures_and_draw
+Befuddle, 3, Instant, super_weaken_creature_and_draw
+Waterknot, 3, Enchantment, permalock_creature
+Waterknot, 3, Enchantment, permalock_creature
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
+Island, 0, Land, make_one_mana
