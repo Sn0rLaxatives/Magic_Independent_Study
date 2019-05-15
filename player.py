@@ -25,9 +25,3 @@ class Player(object):
         self.hand.remove(card)
         game_functions.add_to_stack(CardInTransit(game_functions.determine_destination(card), card, self))
 
-    def print_hand(self):
-        hand_to_show = []
-        for card in self.hand:
-            hand_to_show.append(card.name_of_card)
-        print(hand_to_show)
-

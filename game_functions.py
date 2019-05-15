@@ -25,6 +25,7 @@ def coin_toss_result():
 
 def add_to_stack(card_in_transit):
     game_variables.game_stack.append(card_in_transit)
+    resolve_stack()
 
 
 def determine_destination(card):
@@ -53,6 +54,8 @@ def resolve_stack():
         #     move_card_to_destination(card_being_resolved)
         move_card_to_destination(card_being_resolved)
 
+    game_variables.game.refresh_game_canvas()
+
 
 def move_card_to_destination(card_being_resolved):
     destination = card_being_resolved.destination_of_card
@@ -62,10 +65,10 @@ def move_card_to_destination(card_being_resolved):
     if destination == "graveyard":
         owner_of_card.graveyard.append(card)
     elif destination == "battlefield-Creature":
-        owner_of_card.battlefield["Creature"].append(card)
+        owner_of_card.battlefield.get("Creature").append(card)
     elif destination == "battlefield-Land":
-        owner_of_card.battlefield["Land"].append(card)
+        owner_of_card.battlefield.get("Land").append(card)
     elif destination == "battlefield-Enchantment":
-        owner_of_card.battlefield["Enchantment"].append(card)
+        owner_of_card.battlefield.get("Enchantment").append(card)
     else:
-        owner_of_card.battlefield["Planeswalker"].append(card)
+        owner_of_card.battlefield.get("Planeswalker").append(card)

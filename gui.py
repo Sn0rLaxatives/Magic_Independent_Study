@@ -242,6 +242,7 @@ class GameBoard:
                 self.current_phase = eval(game_variables.phases_of_turn[self.phase_incrementor])
                 self.highlight_current_phase(self.phase_incrementor)
                 self.set_previous_phase_button_background(5)
+                self.refresh_game_canvas()
                 self.phase_incrementor +=1
             else:
                 self.current_phase = eval(game_variables.phases_of_turn[self.phase_incrementor])
@@ -337,16 +338,71 @@ class GameBoard:
         self.ask_if_casting_screen.destroy()
 
         if game_variables.player_taking_turn.mana_in_mana_pool >= card_clicked_on.mana_cost and card_clicked_on.type_of_card in game_variables.castable_types_of_cards:
-            game_variables.player_taking_turn.cast_card(card_clicked_on)
-            print("OMG JEFFREY YOU ARE SO GREAT YOU CAST A CARD")
+            if card_clicked_on.type_of_card != "Land":
+                game_variables.player_taking_turn.cast_card(card_clicked_on)
+            elif game_variables.number_of_lands_played_for_turn == 0:
+                game_variables.number_of_lands_played_for_turn += 1
+                game_variables.player_taking_turn.cast_card(card_clicked_on)
+            else:
+                self.warn_card_could_not_be_casted()
         else:
-            cannot_cast_card_screen = Toplevel(master=self.root)
+            self.warn_card_could_not_be_casted()
 
-            cannot_cast_label = Label(cannot_cast_card_screen, text="You cannot cast that card at this time.")
-            cannot_cast_label.grid(row=0)
+    def warn_card_could_not_be_casted(self):
+        cannot_cast_card_screen = Toplevel(master=self.root)
 
-            close_window_button = Button(cannot_cast_card_screen, text="Ok", command= cannot_cast_card_screen.destroy)
-            close_window_button.grid(row=1)
+        cannot_cast_label = Label(cannot_cast_card_screen, text="You cannot cast that card at this time.")
+        cannot_cast_label.grid(row=0)
+
+        close_window_button = Button(cannot_cast_card_screen, text="Ok", command=cannot_cast_card_screen.destroy)
+        close_window_button.grid(row=1)
+
+    def refresh_game_canvas(self):
+        if self.hand_is_not_showing:
+            self.game_board_canvas.delete("all")
+            self.place_opponents_creatures()
+            self.place_player_taking_turn_creatures()
+            self.place_player_taking_turn_enchantments()
+            self.place_player_taking_turn_lands()
+        else:
+            self.view_hand()
+            self.refresh_game_canvas()
+
+    def place_opponents_creatures(self):
+        image_incrementation = 0
+        for card in game_variables.player_not_taking_turn.battlefield.get("Creature"):
+            card_on_canvas = self.game_board_canvas.create_image(45 + image_incrementation, 0,
+                                                                 image=card.small_image,
+                                                                 activeimage=card.regular_image)
+            self.ids[card_on_canvas] = card
+            image_incrementation += 45
+
+    def place_player_taking_turn_creatures(self):
+        image_incrementation = 0
+        for card in game_variables.player_taking_turn.battlefield.get("Creature"):
+            card_on_canvas = self.game_board_canvas.create_image(45 + image_incrementation, 175,
+                                                                 image=card.small_image,
+                                                                 activeimage=card.regular_image)
+            self.ids[card_on_canvas] = card
+            image_incrementation += 45
+
+    def place_player_taking_turn_enchantments(self):
+        image_incrementation = 0
+        for card in game_variables.player_taking_turn.battlefield.get("Enchantment"):
+            card_on_canvas = self.game_board_canvas.create_image(45 + image_incrementation, 350,
+                                                                 image=card.small_image,
+                                                                 activeimage=card.regular_image)
+            self.ids[card_on_canvas] = card
+            image_incrementation += 45
+
+    def place_player_taking_turn_lands(self):
+        image_incrementation = 0
+        for card in game_variables.player_taking_turn.battlefield.get("Land"):
+            card_on_canvas = self.game_board_canvas.create_image(45 + image_incrementation, 525,
+                                                                 image=card.small_image,
+                                                                 activeimage=card.regular_image)
+            self.ids[card_on_canvas] = card
+            image_incrementation += 45
 
     def update_health_labels(self):
         self.priority_health.set(game_variables.priority_player.life_total)

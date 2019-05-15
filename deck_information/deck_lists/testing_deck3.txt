@@ -1,3 +1,0 @@
-Turtle Test, 3, Creature, test, 2, 3, Ground
-Turtle Test, 3, Creature, test, 2, 3, Ground
-Turtle Test, 3, Creature, test, 2, 3, Ground

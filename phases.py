@@ -3,7 +3,7 @@ import game_variables
 
 
 def beginning_phase(player):
-    game_variables.number_of_lands_played = 0
+    game_variables.number_of_lands_played_for_turn = 0
     game_variables.castable_types_of_cards = ["Instant"]
 
     untap_all_cards(player)
