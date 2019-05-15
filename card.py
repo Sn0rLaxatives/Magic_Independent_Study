@@ -6,7 +6,7 @@ class Card(object):
     def __init__(self, name_of_card, mana_cost, type_of_card):
         #removed card_effect as parameter
         self.name_of_card = name_of_card
-        self.mana_cost = mana_cost
+        self.mana_cost = int(mana_cost)
         self.type_of_card = type_of_card
         self.is_card_tapped = False
         #self.card_effect = getattr(card_effects, card_effect)
@@ -22,6 +22,8 @@ class Card(object):
     def use_ability(self, targets):
         self.card_effect(targets)
 
+    def __str__(self):
+        return self.name_of_card
 
 class Creature(Card):
     def __init__(self, name_of_card, mana_cost, type_of_card, attack, defense, can_be_blocked_by):

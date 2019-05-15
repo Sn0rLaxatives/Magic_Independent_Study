@@ -46,11 +46,12 @@ def determine_destination(card):
 def resolve_stack():
     while bool(game_variables.game_stack):
         card_being_resolved = game_variables.game_stack.pop()
-        if card_being_resolved.card.card_effect.on_resolve:
-            card_being_resolved.card.use_ability()
-            move_card_to_destination(card_being_resolved)
-        else:
-            move_card_to_destination(card_being_resolved)
+        # if card_being_resolved.card.card_effect.on_resolve:
+        #     card_being_resolved.card.use_ability()
+        #     move_card_to_destination(card_being_resolved)
+        # else:
+        #     move_card_to_destination(card_being_resolved)
+        move_card_to_destination(card_being_resolved)
 
 
 def move_card_to_destination(card_being_resolved):

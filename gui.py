@@ -163,6 +163,7 @@ class GameBoard:
     def __init__(self):
         self.root = Tk()
         testing_deck.initialize_images()
+        self.ids = {}
         self.start_screen = StartScreen(self.root)
         self.root.withdraw()
 
@@ -182,6 +183,7 @@ class GameBoard:
 
         self.game_board_canvas = Canvas(self.root, height=700, width=1190)
         self.game_board_canvas.grid(row=0, column=2)
+        self.game_board_canvas.bind('<Button-1>', self.determine_intention_of_click)
 
         self.add_widgets_to_game_data_frame()
         self.add_widgets_to_phase_button_frame()
@@ -221,6 +223,7 @@ class GameBoard:
                 card_on_canvas = self.game_board_canvas.create_image(200 + image_incrementation, 350,
                                                                      image=card.small_image,
                                                                      activeimage=card.regular_image)
+                self.ids[card_on_canvas] = card
                 self.card_images_from_hand_being_viewed.append(card_on_canvas)
                 image_incrementation += 90
             self.hand_is_not_showing = False
@@ -309,6 +312,41 @@ class GameBoard:
     def set_previous_phase_button_background(self, phase_incrementor):
         previous_phase_button = self.list_of_phase_buttons[phase_incrementor - 1]
         previous_phase_button.config(highlightbackground="grey")
+
+    def determine_intention_of_click(self, event):
+        canvas_click_index = self.game_board_canvas.find_closest(event.x, event.y)[0]
+        card_clicked_on = self.ids[canvas_click_index]
+
+        if card_clicked_on in game_variables.player_taking_turn.hand:
+            self.ask_if_wanting_to_cast(card_clicked_on)
+
+    def ask_if_wanting_to_cast(self, card_clicked_on):
+        self.ask_if_casting_screen = Toplevel(master=self.root)
+
+        self.label_asking_if_casting = "Are you wanting to cast {}?".format(card_clicked_on)
+        self.instruction_label = Label(self.ask_if_casting_screen, text=self.label_asking_if_casting)
+        self.instruction_label.grid(row=0, columnspan=2)
+
+        self.yes_button = Button(self.ask_if_casting_screen, text="Yes", command= lambda : game_variables.game.wants_to_cast(card_clicked_on))
+        self.yes_button.grid(row=1, column=0)
+
+        self.no_button = Button(self.ask_if_casting_screen, text="No", command=self.ask_if_casting_screen.destroy)
+        self.no_button.grid(row=1, column=1)
+
+    def wants_to_cast(self, card_clicked_on):
+        self.ask_if_casting_screen.destroy()
+
+        if game_variables.player_taking_turn.mana_in_mana_pool >= card_clicked_on.mana_cost and card_clicked_on.type_of_card in game_variables.castable_types_of_cards:
+            game_variables.player_taking_turn.cast_card(card_clicked_on)
+            print("OMG JEFFREY YOU ARE SO GREAT YOU CAST A CARD")
+        else:
+            cannot_cast_card_screen = Toplevel(master=self.root)
+
+            cannot_cast_label = Label(cannot_cast_card_screen, text="You cannot cast that card at this time.")
+            cannot_cast_label.grid(row=0)
+
+            close_window_button = Button(cannot_cast_card_screen, text="Ok", command= cannot_cast_card_screen.destroy)
+            close_window_button.grid(row=1)
 
     def update_health_labels(self):
         self.priority_health.set(game_variables.priority_player.life_total)
