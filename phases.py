@@ -19,15 +19,11 @@ def beginning_phase(player):
 
 def main_phase(player):
     game_variables.castable_types_of_cards = ["Land", "Creature", "Instant", "Sorcery", "Enchantment", "Planeswalker"]
-    print("Oh yeah we in the main phase of " + player.name)
 
 def combat_phase(player):
-    #creatures_attacking = declare_attackers(player)
-
-    #creatures_blocking = declare_blockers(determine_defending_player(player))
-    print("War!")
+    game_variables.castable_types_of_cards = ["Instant"]
 
 def end_phase(player):
-    print("We are in the endgame now")
+    game_variables.castable_types_of_cards = ["Instant"]
 
 

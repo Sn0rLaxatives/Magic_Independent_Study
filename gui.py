@@ -216,6 +216,16 @@ class GameBoard:
         self.next_phase_button.grid(row=5, column=0)
         self.phase_incrementor = 0
 
+        self.player_taking_turn = StringVar()
+        self.tracking_whose_taking_turn_label = Label(self.game_data_frame, textvariable=self.player_taking_turn)
+        self.tracking_whose_taking_turn_label.grid(row=6)
+        self.update_player_taking_turn_label()
+
+        self.amount_of_mana = StringVar()
+        self.label_for_amount_of_mana_player_has = Label(self.game_data_frame, textvariable=self.amount_of_mana)
+        self.label_for_amount_of_mana_player_has.grid(row=7)
+        self.update_amount_of_mana_label()
+
     def view_hand(self):
         if self.hand_is_not_showing:
             image_incrementation = 0
@@ -243,6 +253,8 @@ class GameBoard:
                 self.highlight_current_phase(self.phase_incrementor)
                 self.set_previous_phase_button_background(5)
                 self.refresh_game_canvas()
+                self.update_player_taking_turn_label()
+                self.update_amount_of_mana_label()
                 self.phase_incrementor +=1
             else:
                 self.current_phase = eval(game_variables.phases_of_turn[self.phase_incrementor])
@@ -259,35 +271,35 @@ class GameBoard:
         self.first_blank_frame = Frame(self.phase_button_frame, height=66, width=66)
         self.first_blank_frame.grid(row=0)
 
-        self.end_phase_button = Button(self.phase_button_frame, text="End Phase")
+        self.end_phase_button = Button(self.phase_button_frame, text="End Phase", command=self.explain_end_phase)
         self.end_phase_button.grid(row=1)
 
         self.first_arrow_canvas = Canvas(self.phase_button_frame, height=100, width=66)
         self.first_arrow_canvas.grid(row=2)
         self.first_arrow_canvas.create_image(0, 0, image=self.up_arrow_image, anchor=NW)
 
-        self.second_main_phase_button = Button(self.phase_button_frame, text="2nd Main Phase")
+        self.second_main_phase_button = Button(self.phase_button_frame, text="2nd Main Phase", command=self.explain_main_phase)
         self.second_main_phase_button.grid(row=3)
 
         self.second_arrow_canvas = Canvas(self.phase_button_frame, height=100, width=66)
         self.second_arrow_canvas.grid(row=4)
         self.second_arrow_canvas.create_image(0, 0, image=self.up_arrow_image, anchor=NW)
 
-        self.combat_phase_button = Button(self.phase_button_frame, text="Combat Phase")
+        self.combat_phase_button = Button(self.phase_button_frame, text="Combat Phase", command=self.explain_combat_phase)
         self.combat_phase_button.grid(row=5)
 
         self.third_arrow_canvas = Canvas(self.phase_button_frame, height=100, width=66)
         self.third_arrow_canvas.grid(row=6)
         self.third_arrow_canvas.create_image(0, 0, image=self.up_arrow_image, anchor=NW)
 
-        self.main_phase_button = Button(self.phase_button_frame, text="Main Phase")
+        self.main_phase_button = Button(self.phase_button_frame, text="Main Phase", command=self.explain_main_phase)
         self.main_phase_button.grid(row=7)
 
         self.fourth_arrow_canvas = Canvas(self.phase_button_frame, height=100, width=66)
         self.fourth_arrow_canvas.grid(row=8)
         self.fourth_arrow_canvas.create_image(0, 0, image=self.up_arrow_image, anchor=NW)
 
-        self.beginning_phase_button = Button(self.phase_button_frame, text="Beginning phase")
+        self.beginning_phase_button = Button(self.phase_button_frame, text="Beginning phase", command=self.explain_beginning_phase)
         self.beginning_phase_button.grid(row=9)
 
         self.last_blank_frame = Frame(self.phase_button_frame, height=50, width=66)
@@ -298,6 +310,45 @@ class GameBoard:
         self.list_of_phase_buttons.append(self.combat_phase_button)
         self.list_of_phase_buttons.append(self.second_main_phase_button)
         self.list_of_phase_buttons.append(self.end_phase_button)
+
+    def explain_end_phase(self):
+        end_phase_screen = Toplevel(master=self.root)
+
+        explanation_label = Label(end_phase_screen, text="The ending phase is the fifth and final phase of a turn. This is last opportunity for the active player to do anything before passing the turn.")
+        explanation_label.grid(row=0)
+
+        close_window_button = Button(end_phase_screen, text="Ok", command=end_phase_screen.destroy)
+        close_window_button.grid(row=1)
+
+    def explain_main_phase(self):
+        main_phase_screen = Toplevel(master=self.root)
+
+        explanation_label = Label(main_phase_screen,
+                                  text="The main phase is both the second and fourth phases of a turn. Non-instants can usually only be played during this phase, only by the active player, and only when the stack is empty. \n The following events occur during the main phase: \n Abilities that trigger at the beginning of the main phase go onto the stack. \n The active player gains priority. \n Once per turn, the active player may play a land from his or her hand during this phase while the stack is empty. \n This is considered a Special Action which does not use the stack. \n Then when both players yield priority in succession while the stack is empty during the pre-combat main phase, the game proceeds to the combat phase. After the combat phase is complete, the game proceeds to the post-combat main phase. \n When both players yield priority in succession while the stack is empty during the post-combat main phase, the game proceeds to the end phase.")
+        explanation_label.grid(row=0)
+
+        close_window_button = Button(main_phase_screen, text="Ok", command=main_phase_screen.destroy)
+        close_window_button.grid(row=1)
+
+    def explain_combat_phase(self):
+        combat_phase_screen = Toplevel(master=self.root)
+
+        explanation_label = Label(combat_phase_screen,
+                                  text="The combat phase is the third phase of a turn. In this phase the player may choose to select any non tapped creatures and attack the other player. \n In response the other player may select blockers and determing whom those blockers will block.")
+        explanation_label.grid(row=0)
+
+        close_window_button = Button(combat_phase_screen, text="Ok", command=combat_phase_screen.destroy)
+        close_window_button.grid(row=1)
+
+    def explain_beginning_phase(self):
+        beginning_phase_screen = Toplevel(master=self.root)
+
+        explaining_label = Label(beginning_phase_screen,
+                                  text="The beginning phase is the first phase of a turn. In this phase all permanents for the player taking the turn are untapped and that player will draw one card from their deck.")
+        explaining_label.grid(row=0)
+
+        close_window_button = Button(beginning_phase_screen, text="Ok", command=beginning_phase_screen.destroy)
+        close_window_button.grid(row=1)
 
     def highlight_current_phase(self, phase_incrementor):
         if phase_incrementor > 0:
@@ -316,10 +367,15 @@ class GameBoard:
 
     def determine_intention_of_click(self, event):
         canvas_click_index = self.game_board_canvas.find_closest(event.x, event.y)[0]
-        card_clicked_on = self.ids[canvas_click_index]
+        self.card_clicked_on = self.ids[canvas_click_index]
 
-        if card_clicked_on in game_variables.player_taking_turn.hand:
-            self.ask_if_wanting_to_cast(card_clicked_on)
+        in_combat_phase = self.phase_incrementor == 3
+        card_on_players_battlefield = self.card_clicked_on in game_variables.player_taking_turn.battlefield.get("Creature")
+
+        if self.card_clicked_on in game_variables.player_taking_turn.hand:
+            self.ask_if_wanting_to_cast(self.card_clicked_on)
+        elif in_combat_phase and card_on_players_battlefield:
+            self.ask_if_player_wants_this_creature_to_attack(self.card_clicked_on)
 
     def ask_if_wanting_to_cast(self, card_clicked_on):
         self.ask_if_casting_screen = Toplevel(master=self.root)
@@ -339,6 +395,7 @@ class GameBoard:
 
         if game_variables.player_taking_turn.mana_in_mana_pool >= card_clicked_on.mana_cost and card_clicked_on.type_of_card in game_variables.castable_types_of_cards:
             if card_clicked_on.type_of_card != "Land":
+                game_variables.player_taking_turn.use_mana_from_mana_pool(card_clicked_on.mana_cost)
                 game_variables.player_taking_turn.cast_card(card_clicked_on)
             elif game_variables.number_of_lands_played_for_turn == 0:
                 game_variables.number_of_lands_played_for_turn += 1
@@ -356,6 +413,106 @@ class GameBoard:
 
         close_window_button = Button(cannot_cast_card_screen, text="Ok", command=cannot_cast_card_screen.destroy)
         close_window_button.grid(row=1)
+
+    def ask_if_player_wants_this_creature_to_attack(self, card_clicked_on):
+        self.ask_if_attacking_screen = Toplevel(master=self.root)
+
+        label_asking_if_attacking = "Are you wanting to attack with {}?".format(card_clicked_on)
+        instruction_label = Label(self.ask_if_attacking_screen, text=label_asking_if_attacking)
+        instruction_label.grid(row=0, columnspan=2)
+
+        yes_button = Button(self.ask_if_attacking_screen, text="Yes",
+                                 command= self.set_intention_to_attack_to_true)
+        yes_button.grid(row=1, column=0)
+
+        no_button = Button(self.ask_if_attacking_screen, text="No", command=self.set_intention_to_attack_to_false)
+        no_button.grid(row=1, column=1)
+
+    def set_intention_to_attack_to_true(self):
+        self.process_selected_creature_to_attack(self.card_clicked_on)
+        self.ask_if_attacking_screen.destroy()
+
+    def set_intention_to_attack_to_false(self):
+        self.ask_if_attacking_screen.destroy()
+
+    def process_selected_creature_to_attack(self, card_clicked_on):
+        if card_clicked_on.is_card_tapped:
+            self.warn_creature_cannot_attack()
+        else:
+            dictionary_key = str(card_clicked_on.attack)
+            game_variables.list_of_attacking_creatures[dictionary_key] = card_clicked_on
+            self.ask_player_if_done_selecting_attackers()
+
+    def ask_player_if_done_selecting_attackers(self):
+        self.done_selecting_attackers_prompt_screen = Toplevel(master=self.root)
+
+        done_selecting_question_label = Label(self.done_selecting_attackers_prompt_screen, text="Are you done selecting creatures to attack with?")
+        done_selecting_question_label.grid(row=0, columnspan=2)
+
+        yes_button = Button(self.done_selecting_attackers_prompt_screen, text="Yes", command=self.determine_prompt_for_defensive_player)
+        yes_button.grid(row=1, column=0)
+
+        no_button = Button(self.done_selecting_attackers_prompt_screen, text="No", command=self.done_selecting_attackers_prompt_screen.destroy)
+        no_button.grid(row=1, column=1)
+
+    def warn_creature_cannot_attack(self):
+        cannot_attack_with_creature_screen = Toplevel(master=self.root)
+
+        cannot_cast_label = Label(cannot_attack_with_creature_screen, text="You cannot attack with this creature.")
+        cannot_cast_label.grid(row=0)
+
+        close_window_button = Button(cannot_attack_with_creature_screen, text="Ok", command=cannot_attack_with_creature_screen.destroy)
+        close_window_button.grid(row=1)
+
+    def determine_prompt_for_defensive_player(self):
+        self.done_selecting_attackers_prompt_screen.destroy()
+        defending_player_has_blockers = self.does_defensive_player_have_blockers()
+        if defending_player_has_blockers:
+            self.ask_defensive_player_if_they_will_block()
+        else:
+            self.warn_defensive_player_of_damage_taken()
+
+    def does_defensive_player_have_blockers(self):
+        for creature_card in game_variables.player_not_taking_turn.battlefield.get("Creature"):
+            if not creature_card.is_card_tapped:
+                return True
+        return False
+
+    def ask_defensive_player_if_they_will_block(self):
+        self.ask_if_player_will_block_screen = Toplevel(master=self.root)
+
+        instruction_label = Label(self.ask_if_player_will_block_screenn, text="Are you wanting to block some/all of the damage?")
+        instruction_label.grid(row=0, columnspan=2)
+
+        yes_button = Button(self.ask_if_player_will_block_screen, text="Yes",
+                            command=self.ask_if_player_will_block_screen.destroy())
+        yes_button.grid(row=1, column=0)
+
+        no_button = Button(self.ask_if_player_will_block_screen, text="No", command=self.close_window_and_warn_of_damage())
+        no_button.grid(row=1, column=1)
+
+    def close_window_and_warn_of_damage(self):
+        self.ask_if_player_will_block_screen.destroy()
+        self.warn_defensive_player_of_damage_taken()
+
+    def warn_defensive_player_of_damage_taken(self):
+        damage_taken_screen = Toplevel(master=self.root)
+
+        damage_taken_string = "{} has taken {} damage.".format(game_variables.player_not_taking_turn.name, self.calculate_final_damage())
+
+        cannot_cast_label = Label(damage_taken_screen, text=damage_taken_string)
+        cannot_cast_label.grid(row=0)
+
+        close_window_button = Button(damage_taken_screen, text="Ok",
+                                     command=damage_taken_screen.destroy)
+        close_window_button.grid(row=1)
+
+    def calculate_final_damage(self):
+        damage_taken = 0
+        for attack_damage_remaining in game_variables.list_of_attacking_creatures:
+            damage_taken += int(attack_damage_remaining)
+        game_variables.player_not_taking_turn.subtract_health(damage_taken)
+        return damage_taken
 
     def refresh_game_canvas(self):
         if self.hand_is_not_showing:
@@ -380,7 +537,7 @@ class GameBoard:
     def place_player_taking_turn_creatures(self):
         image_incrementation = 0
         for card in game_variables.player_taking_turn.battlefield.get("Creature"):
-            card_on_canvas = self.game_board_canvas.create_image(45 + image_incrementation, 175,
+            card_on_canvas = self.game_board_canvas.create_image(150 + image_incrementation, 175,
                                                                  image=card.small_image,
                                                                  activeimage=card.regular_image)
             self.ids[card_on_canvas] = card
@@ -389,7 +546,7 @@ class GameBoard:
     def place_player_taking_turn_enchantments(self):
         image_incrementation = 0
         for card in game_variables.player_taking_turn.battlefield.get("Enchantment"):
-            card_on_canvas = self.game_board_canvas.create_image(45 + image_incrementation, 350,
+            card_on_canvas = self.game_board_canvas.create_image(150 + image_incrementation, 350,
                                                                  image=card.small_image,
                                                                  activeimage=card.regular_image)
             self.ids[card_on_canvas] = card
@@ -398,7 +555,7 @@ class GameBoard:
     def place_player_taking_turn_lands(self):
         image_incrementation = 0
         for card in game_variables.player_taking_turn.battlefield.get("Land"):
-            card_on_canvas = self.game_board_canvas.create_image(45 + image_incrementation, 525,
+            card_on_canvas = self.game_board_canvas.create_image(150 + image_incrementation, 525,
                                                                  image=card.small_image,
                                                                  activeimage=card.regular_image)
             self.ids[card_on_canvas] = card
@@ -408,6 +565,19 @@ class GameBoard:
         self.priority_health.set(game_variables.priority_player.life_total)
 
         self.non_priority_health.set(game_variables.non_priority_player.life_total)
+
+    def update_player_taking_turn_label(self):
+        self.player_taking_turn.set("It is " + game_variables.player_taking_turn.name + "'s turn.")
+
+    def update_amount_of_mana_label(self):
+        self.amount_of_mana.set("You have: " + str(game_variables.player_taking_turn.mana_in_mana_pool) + " mana")
+
+    def game_over(self, player):
+        game_over_screen = Toplevel(master=self.root)
+
+        game_over_string = player.name + ", lost the game!"
+        game_over_label = Label(game_over_screen, text=game_over_string)
+        game_over_label.grid(row=1)
 
     def start_game(self):
         self.set_window_size()

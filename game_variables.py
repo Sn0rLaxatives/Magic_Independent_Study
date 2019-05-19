@@ -23,5 +23,6 @@ phases_of_turn = ['phases.beginning_phase(game_variables.player_taking_turn)',
 castable_types_of_cards = []
 number_of_lands_played_for_turn = 0
 
+list_of_attacking_creatures = {}
 
 game = GameBoard()
