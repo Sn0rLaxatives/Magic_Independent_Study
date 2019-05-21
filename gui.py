@@ -163,6 +163,7 @@ class GameBoard:
     def __init__(self):
         self.root = Tk()
         testing_deck.initialize_images()
+        self.attacking_creature_identifier = 0
         self.ids = {}
         self.start_screen = StartScreen(self.root)
         self.root.withdraw()
@@ -439,8 +440,8 @@ class GameBoard:
         if card_clicked_on.is_card_tapped:
             self.warn_creature_cannot_attack()
         else:
-            dictionary_key = str(card_clicked_on.attack)
-            game_variables.list_of_attacking_creatures[dictionary_key] = card_clicked_on
+            game_variables.list_of_attacking_creatures[self.attacking_creature_identifier] = card_clicked_on
+            self.attacking_creature_identifier += 1
             self.ask_player_if_done_selecting_attackers()
 
     def ask_player_if_done_selecting_attackers(self):
@@ -481,14 +482,14 @@ class GameBoard:
     def ask_defensive_player_if_they_will_block(self):
         self.ask_if_player_will_block_screen = Toplevel(master=self.root)
 
-        instruction_label = Label(self.ask_if_player_will_block_screenn, text="Are you wanting to block some/all of the damage?")
+        instruction_label = Label(self.ask_if_player_will_block_screen, text="Are you wanting to block some/all of the damage?")
         instruction_label.grid(row=0, columnspan=2)
 
         yes_button = Button(self.ask_if_player_will_block_screen, text="Yes",
-                            command=self.ask_if_player_will_block_screen.destroy())
+                            command=self.ask_if_player_will_block_screen.destroy)
         yes_button.grid(row=1, column=0)
 
-        no_button = Button(self.ask_if_player_will_block_screen, text="No", command=self.close_window_and_warn_of_damage())
+        no_button = Button(self.ask_if_player_will_block_screen, text="No", command=self.close_window_and_warn_of_damage)
         no_button.grid(row=1, column=1)
 
     def close_window_and_warn_of_damage(self):
@@ -509,10 +510,15 @@ class GameBoard:
 
     def calculate_final_damage(self):
         damage_taken = 0
-        for attack_damage_remaining in game_variables.list_of_attacking_creatures:
-            damage_taken += int(attack_damage_remaining)
+        for creature_identifier in game_variables.list_of_attacking_creatures:
+            damage_taken += int(game_variables.list_of_attacking_creatures.get(creature_identifier).attack)
         game_variables.player_not_taking_turn.subtract_health(damage_taken)
+        self.clear_attacking_creatures_list()
         return damage_taken
+
+    def clear_attacking_creatures_list(self):
+        game_variables.list_of_attacking_creatures = {}
+        self.attacking_creature_identifier = 0
 
     def refresh_game_canvas(self):
         if self.hand_is_not_showing:
