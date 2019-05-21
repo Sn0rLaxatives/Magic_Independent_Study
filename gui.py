@@ -376,7 +376,10 @@ class GameBoard:
         if self.card_clicked_on in game_variables.player_taking_turn.hand:
             self.ask_if_wanting_to_cast(self.card_clicked_on)
         elif in_combat_phase and card_on_players_battlefield:
-            self.ask_if_player_wants_this_creature_to_attack(self.card_clicked_on)
+            if self.card_clicked_on not in game_variables.list_of_attacking_creatures.values():
+                self.ask_if_player_wants_this_creature_to_attack(self.card_clicked_on)
+            else:
+                self.ask_player_if_done_selecting_attackers()
 
     def ask_if_wanting_to_cast(self, card_clicked_on):
         self.ask_if_casting_screen = Toplevel(master=self.root)
@@ -507,6 +510,8 @@ class GameBoard:
         close_window_button = Button(damage_taken_screen, text="Ok",
                                      command=damage_taken_screen.destroy)
         close_window_button.grid(row=1)
+
+        self.next_phase()
 
     def calculate_final_damage(self):
         damage_taken = 0
