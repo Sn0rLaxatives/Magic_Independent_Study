@@ -579,11 +579,18 @@ class GameBoard:
         self.amount_of_mana.set("You have: " + str(game_variables.player_taking_turn.mana_in_mana_pool) + " mana")
 
     def game_over(self, player):
-        game_over_screen = Toplevel(master=self.root)
+        self.game_over_screen = Toplevel(master=self.root)
 
         game_over_string = player.name + ", lost the game!"
-        game_over_label = Label(game_over_screen, text=game_over_string)
+        game_over_label = Label(self.game_over_screen, text=game_over_string)
         game_over_label.grid(row=1)
+
+        end_game_button = Button(self.game_over_screen, Text="Ok", command=self.end_game)
+        end_game_button.grid(row=2)
+
+    def end_game(self):
+        self.game_over_screen.destroy()
+        self.root.destroy()
 
     def start_game(self):
         self.set_window_size()
